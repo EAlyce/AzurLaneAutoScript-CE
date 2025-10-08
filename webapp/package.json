@@ -1,5 +1,5 @@
 {
-  "name": "alas",
+  "name": "alas-ce",
   "private": true,
   "engines": {
     "node": ">=v14.14",

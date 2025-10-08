@@ -1001,7 +1001,7 @@ class AlasGUI(Frame):
 
         def _force_restart():
             if State.restart_event is not None:
-                toast("Alas will restart in 3 seconds", duration=0, color="error")
+                toast("Alas CE will restart in 3 seconds", duration=0, color="error")
                 clearup()
                 State.restart_event.set()
             else:
@@ -1204,9 +1204,9 @@ class AlasGUI(Frame):
             # show something
             put_markdown(
                 """
-            Alas is a free open source software, if you paid for Alas from any channel, please refund.
-            Alas 是一款免费开源软件，如果你在任何渠道付费购买了Alas，请退款。
-            Project repository 项目地址：`https://github.com/LmeSzinc/AzurLaneAutoScript`
+            Alas CE is a free open source software, if you paid for Alas CE from any channel, please refund.
+            Alas CE 是一款免费开源软件，如果你在任何渠道付费购买了Alas CE，请退款。
+            Project repository 项目地址：`https://github.com/EAlyce/AzurLaneAutoScript-CE`
             """
             ).style("text-align: center")
 
@@ -1226,7 +1226,7 @@ class AlasGUI(Frame):
 
     def run(self) -> None:
         # setup gui
-        set_env(title="Alas", output_animation=False)
+        set_env(title="Alas CE", output_animation=False)
         add_css(filepath_css("alas"))
         if self.is_mobile:
             add_css(filepath_css("alas-mobile"))
@@ -1444,7 +1444,7 @@ def app_manage():
             scope="config_table",
         )
 
-    set_env(title="Alas", output_animation=False)
+    set_env(title="Alas CE", output_animation=False)
     run_js("$('head').append('<style>.footer{display:none}</style>')")
 
     put_html(f"<h2>{t('Gui.AppManage.PageTitle')}</h2>")
@@ -1511,11 +1511,11 @@ def clearup():
         alas.stop()
     State.clearup()
     task_handler.stop()
-    logger.info("Alas closed.")
+    logger.info("Alas CE closed.")
 
 
 def app():
-    parser = argparse.ArgumentParser(description="Alas web service")
+    parser = argparse.ArgumentParser(description="Alas CE web service")
     parser.add_argument(
         "-k", "--key", type=str, help="Password of alas. No password by default"
     )

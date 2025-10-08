@@ -8,6 +8,8 @@ if (process.env.VITE_APP_VERSION === undefined) {
  * @see https://www.electron.build/configuration/configuration
  */
 const config = {
+  appId: 'com.ealyce.alas-ce',
+  productName: 'Alas CE',
   directories: {
     output: 'dist',
     buildResources: 'buildResources',
@@ -17,6 +19,18 @@ const config = {
   ],
   extraMetadata: {
     version: process.env.VITE_APP_VERSION,
+  },
+  win: {
+    icon: 'buildResources/icon.ico',
+    target: 'nsis',
+  },
+  mac: {
+    icon: 'buildResources/icon.icns',
+    target: 'dmg',
+  },
+  linux: {
+    icon: 'buildResources/icon.png',
+    target: 'AppImage',
   },
 };
 

@@ -17,7 +17,7 @@ def func(ev: threading.Event):
 
     State.restart_event = ev
 
-    parser = argparse.ArgumentParser(description="Alas web service")
+    parser = argparse.ArgumentParser(description="Alas CE web service")
     parser.add_argument(
         "--host",
         type=str,

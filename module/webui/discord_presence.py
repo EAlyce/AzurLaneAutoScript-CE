@@ -9,7 +9,7 @@ RPC: AioPresence = None
 async def run():
     assert RPC is not None
     await RPC.connect()
-    await RPC.update(state="Alas is playing Azurlane", start=time.time(), large_image="alas")
+    await RPC.update(state="Alas CE is playing Azurlane", start=time.time(), large_image="alas")
 
 
 def init_discord_rpc():

@@ -43,7 +43,7 @@ const createWindow = async () => {
     height: 880,
     show: false, // Use 'ready-to-show' event to show window
     frame: false,
-    icon: path.join(__dirname, './buildResources/icon.ico'),
+    icon: path.join(__dirname, '../../../buildResources/icon.ico'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,   // Spectron tests can't work with contextIsolation: true
@@ -108,7 +108,7 @@ const createWindow = async () => {
   });
 
   // Tray
-  const tray = new Tray(path.join(__dirname, 'icon.png'));
+  const tray = new Tray(path.join(__dirname, '../../../buildResources/icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show',
@@ -131,7 +131,7 @@ const createWindow = async () => {
       }
     }
   ]);
-  tray.setToolTip('Alas');
+  tray.setToolTip('Alas CE');
   tray.setContextMenu(contextMenu);
   tray.on('click', () => {
     mainWindow?.isVisible() ? mainWindow?.hide() : mainWindow?.show()
