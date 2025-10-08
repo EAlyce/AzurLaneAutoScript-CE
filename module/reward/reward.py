@@ -4,7 +4,7 @@ from module.base.timer import Timer
 from module.combat.assets import *
 from module.logger import logger
 from module.reward.assets import *
-from module.ui.assets import MISSION_CHECK
+from module.ui.assets import MISSION_CHECK, DORMMENU_CHECK, DORMMENU_GOTO_MAIN
 from module.ui.navbar import Navbar
 from module.ui.page import page_main, page_mission, page_reward
 from module.ui.ui import UI
@@ -120,6 +120,14 @@ class Reward(UI):
 
             if not self.appear(MISSION_CHECK):
                 if self.appear_then_click(GET_SHIP, interval=interval):
+                    exit_timer.reset()
+                    click_timer.reset()
+                    timeout.reset()
+                    continue
+                # Check if accidentally entered dorm menu during mission collection
+                if self.appear(DORMMENU_CHECK, offset=(30, 30), interval=3):
+                    logger.info('Accidentally entered dorm menu, returning to main')
+                    self.device.click(DORMMENU_GOTO_MAIN)
                     exit_timer.reset()
                     click_timer.reset()
                     timeout.reset()

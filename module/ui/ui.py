@@ -549,6 +549,12 @@ class UI(InfoHandler):
             logger.info(f'UI additional: {EXERCISE_PREPARATION} -> {GOTO_MAIN}')
             self.device.click(GOTO_MAIN)
             return True
+        
+        # Dorm menu mistaken click - handle when accidentally entering dorm menu
+        if self.appear(DORMMENU_CHECK, offset=(30, 30), interval=3):
+            logger.info(f'UI additional: {DORMMENU_CHECK} -> {DORMMENU_GOTO_MAIN}')
+            self.device.click(DORMMENU_GOTO_MAIN)
+            return True
 
         # RPG event (raid_20240328)
         # if self.appear_then_click(RPG_STATUS_POPUP, offset=(30, 30), interval=3):
@@ -610,6 +616,8 @@ class UI(InfoHandler):
         if button == MEOWFFICER_GOTO_DORMMENU:
             self.interval_reset(GET_SHIP)
         if button == DORMMENU_GOTO_DORM:
+            self.interval_reset(GET_SHIP)
+        if button == DORMMENU_GOTO_MAIN:
             self.interval_reset(GET_SHIP)
         for switch_button in page_main.links.values():
             if button == switch_button:
