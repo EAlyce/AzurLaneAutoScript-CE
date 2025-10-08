@@ -502,7 +502,7 @@
     },
     "OnePushConfig": {
       "name": "错误推送设置",
-      "help": "发生无法处理的异常后，使用 Onepush 推送一条错误信息。配置方法见文档：https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/Onepush-configuration-%5BCN%5D"
+      "help": "发生无法处理的异常后，使用 Onepush 推送一条错误信息。配置方法见文档：https://github.com/EAlyce/AzurLaneAutoScript-CE/wiki/Onepush-configuration-%5BCN%5D"
     },
     "ScreenshotLength": {
       "name": "出错时，保留最后 X 张截图",
@@ -1355,7 +1355,7 @@
     },
     "CustomFilter": {
       "name": "自定义委托过滤器",
-      "help": "使用自定义过滤器需将 \"委托过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_cn"
+      "help": "使用自定义过滤器需将 \"委托过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/EAlyce/AzurLaneAutoScript-CE/wiki/filter_string_cn"
     },
     "DoMajorCommission": {
       "name": "做主要委托（1200油/1000油委托）",
@@ -1483,7 +1483,7 @@
     },
     "CustomFilter": {
       "name": "自定义科研过滤器",
-      "help": "使用自定义过滤器需将 \"科研过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_cn"
+      "help": "使用自定义过滤器需将 \"科研过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/EAlyce/AzurLaneAutoScript-CE/wiki/filter_string_cn"
     }
   },
   "Dorm": {
@@ -2430,7 +2430,7 @@
     },
     "CustomFilter": {
       "name": "自定义过滤器",
-      "help": "使用自定义过滤器需将 \"港口商店过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_cn"
+      "help": "使用自定义过滤器需将 \"港口商店过滤器\" 设置为 \"自定义\"，并阅读 https://github.com/EAlyce/AzurLaneAutoScript-CE/wiki/filter_string_cn"
     }
   },
   "OpsiVoucher": {
@@ -2440,7 +2440,7 @@
     },
     "Filter": {
       "name": "商店过滤器",
-      "help": "参考文档 https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/reward_shop_filter_string"
+      "help": "参考文档 https://github.com/EAlyce/AzurLaneAutoScript-CE/wiki/reward_shop_filter_string"
     }
   },
   "OpsiDaily": {
