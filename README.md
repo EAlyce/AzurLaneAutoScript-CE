@@ -1,4 +1,4 @@
-本项目基于 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript) 修改而来，原项目采用 GPL-3.0 许可证。
+本项目 AzurLaneAutoScript-CE 基于 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript) 修改而来，原项目采用 GPL-3.0 许可证。
 本项目同样以 GPL-3.0 协议发布。
 
 本版本仅供个人使用，不接受 Issues 或 Pull Requests。
@@ -12,6 +12,7 @@
 
 注意：本版本不会实时同步原项目的更新（不计划持续更新）。
 
+以下是原版AzurLaneAutoScript说明
 
 **| [English](README_en.md) | 简体中文 | [日本語](README_jp.md) |**
 
