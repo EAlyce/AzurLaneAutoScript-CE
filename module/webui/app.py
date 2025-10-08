@@ -954,16 +954,38 @@ class AlasGUI(Frame):
             try:
                 current_state = State.deploy_config.AutoUpdate
                 new_state = not current_state
-                State.deploy_config.AutoUpdate = new_state
                 
-                # Show restart warning
+                # 完全控制所有更新相关设置
+                State.deploy_config.AutoUpdate = new_state
+                State.deploy_config.EnableReload = new_state
+                if new_state:
+                    # 开启更新时设置合理的检查间隔
+                    if State.deploy_config.CheckUpdateInterval == 0:
+                        State.deploy_config.CheckUpdateInterval = 5
+                else:
+                    # 关闭更新时停止所有自动检查
+                    State.deploy_config.CheckUpdateInterval = 0
+                
+                # 保存配置到文件
+                State.deploy_config.write()
+                
+                # 显示状态提示
                 if new_state:
                     toast(t("Gui.Update.AutoUpdateEnabled"), duration=5, color="success")
+                    # 重新启动更新任务
+                    if updater.delay > 0:
+                        task_handler.add(updater.check_update, updater.delay)
                 else:
                     toast(t("Gui.Update.AutoUpdateDisabled"), duration=5, color="warning")
+                    # 停止更新任务
+                    task_handler.remove_by_name("check_update")
                 
-                # Update the button display
+                # 更新按钮显示
                 update_auto_update_button()
+                
+                # 提示需要重启以完全生效
+                toast("重启后完全生效", duration=3, color="info")
+                
             except Exception as e:
                 logger.exception(e)
                 toast(t("Gui.Update.SettingError"), duration=3, color="error")
@@ -1483,9 +1505,13 @@ def startup():
     State.init()
     lang.reload()
     updater.event = State.manager.Event()
-    if updater.delay > 0:
+    
+    # 只有在WebUI开关启用时才启动更新任务
+    if State.deploy_config.AutoUpdate and updater.delay > 0:
         task_handler.add(updater.check_update, updater.delay)
-    task_handler.add(updater.schedule_update(), 86400)
+    if State.deploy_config.AutoUpdate:
+        task_handler.add(updater.schedule_update(), 86400)
+    
     task_handler.start()
     if State.deploy_config.DiscordRichPresence:
         init_discord_rpc()
