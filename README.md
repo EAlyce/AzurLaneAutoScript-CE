@@ -1,10 +1,16 @@
-原版链接： https://github.com/LmeSzinc/AzurLaneAutoScript
+本项目基于 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript) 修改而来，原项目采用 GPL-3.0 许可证。
+本项目同样以 GPL-3.0 协议发布。
 
-本版仅作为个人使用，不接受issues 以及Pull requests。使用此版本出现问题后请使用原版，谢谢
+本版本仅供个人使用，不接受 Issues 或 Pull Requests。
+若在使用过程中遇到问题，请使用原版。
 
-与原版相比新增7-2三战捡问号、永续侵蚀一
+与原版相比，本版本新增以下功能：
 
-本版本不会实时拉取原版代码更新（能用就行，不想更新）
+* 7-2 三战捡问号
+* 永续侵蚀一
+
+注意：本版本不会实时同步原项目的更新（不计划持续更新）。
+
 
 **| [English](README_en.md) | 简体中文 | [日本語](README_jp.md) |**
 
