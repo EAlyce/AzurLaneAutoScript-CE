@@ -1,3 +1,4 @@
+from module.base.timer import Timer
 from module.combat.assets import *
 from module.combat.combat import Combat as Combat_
 from module.logger import logger
@@ -262,14 +263,19 @@ class Combat(Combat_, MapEventHandler):
             submarine_mode = self.config.Submarine_Mode
 
         success = True
+        timeout = Timer(30, count=60).start()  # 30 seconds timeout
+        stuck_timer = Timer(5, count=10).start()  # Check if stuck every 5 seconds
+        
         while 1:
             self.device.screenshot()
 
             if self.handle_submarine_call(submarine_mode):
+                timeout.reset()
                 continue
             # Don't change auto search option if failed
             enable = success if success is not None else None
             if self.handle_os_auto_search_map_option(drop=drop, enable=enable):
+                timeout.reset()
                 continue
 
             # End
@@ -277,15 +283,30 @@ class Combat(Combat_, MapEventHandler):
                 self.device.screenshot_interval_set()
                 break
             if self.is_combat_executing():
+                timeout.reset()
                 continue
             if self.handle_auto_search_battle_status():
                 success = None
+                timeout.reset()
                 continue
             if self.handle_auto_search_exp_info():
                 success = None
+                timeout.reset()
                 continue
             if self.handle_map_event():
+                timeout.reset()
                 continue
+            
+            # Timeout check
+            if timeout.reached():
+                logger.warning('Combat end timeout, force clicking')
+                self.device.click(CLICK_SAFE_AREA)
+                timeout.reset()
+            
+            # Stuck detection
+            if stuck_timer.reached():
+                logger.info('Checking if stuck in combat end')
+                stuck_timer.reset()
             
         logger.info('Combat end.')
         return success

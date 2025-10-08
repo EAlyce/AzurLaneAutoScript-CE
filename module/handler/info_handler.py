@@ -394,6 +394,19 @@ class InfoHandler(ModuleBase):
         2023.09.14 Story options changed with big white options in the middle,
             Check STORY_SKIP_3 but click the original STORY_SKIP.
         """
+        # Check if it's a get items screen first
+        from module.combat.assets import GET_ITEMS_1, GET_ITEMS_2, GET_ITEMS_3
+        from module.os_handler.assets import GET_ADAPTABILITY, GET_MEOWFFICER_ITEMS_1, GET_MEOWFFICER_ITEMS_2
+        if (self.appear(GET_ITEMS_1, offset=(30, 30)) or 
+            self.appear(GET_ITEMS_2, offset=(30, 30)) or 
+            self.appear(GET_ITEMS_3, offset=(30, 30)) or
+            self.appear(GET_ADAPTABILITY, offset=(30, 30)) or
+            self.appear(GET_MEOWFFICER_ITEMS_1, offset=(30, 30)) or
+            self.appear(GET_MEOWFFICER_ITEMS_2, offset=(30, 30))):
+            logger.info('Get items screen detected, click to continue')
+            self.device.click(OS_CLICK_SAFE_AREA)
+            return True
+        
         if self.story_popup_timeout.started() and not self.story_popup_timeout.reached():
             if self.handle_popup_confirm('STORY_SKIP'):
                 self.story_popup_timeout = Timer(10)

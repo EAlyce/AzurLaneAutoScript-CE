@@ -427,14 +427,16 @@ class ActionPointHandler(UI, MapEventHandler):
                 self.action_point_quit()
                 raise ActionPointLimit
 
-            # Sort action point boxes
+            # Sort action point boxes - 优先使用小的补给箱
             box = []
+            # 按从小到大的顺序检查：1=20AP, 2=50AP, 3=100AP
             for index in [1, 2, 3]:
                 if self._action_point_box[index] > 0:
-                    if self._action_point_current + ACTION_POINT_BOX[index] >= 200:
-                        box.append(index)
-                    else:
-                        box.insert(0, index)
+                    box.append(index)
+            
+            # 优先选择最小的补给箱，无论是否能满足全部需求
+            if len(box) > 0:
+                box = [box[0]]  # 始终选择最小的补给箱
 
             # Use action point boxes
             if len(box):

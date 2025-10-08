@@ -24,6 +24,10 @@ class Freebies(ModuleBase):
 
         if self.config.SupplyPack_Collect:
             logger.hr('Supply pack', level=1)
-            SupplyPack_250814(self.config, self.device).run()
+            if self.config.SERVER in ['tw']:
+                # SupplyPack(self.config, self.device).run()
+                pass
+            else:
+                SupplyPack_250814(self.config, self.device).run()
 
         self.config.task_delay(server_update=True)

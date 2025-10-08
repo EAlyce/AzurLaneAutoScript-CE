@@ -32,7 +32,7 @@ ARCHIVES_PREFIX = {
 }
 MAINS = ['Main', 'Main2', 'Main3']
 EVENTS = ['Event', 'Event2', 'EventA', 'EventB', 'EventC', 'EventD', 'EventSp']
-GEMS_FARMINGS = ['GemsFarming']
+GEMS_FARMINGS = ['GemsFarming', 'C72MysteryFarming']
 RAIDS = ['Raid', 'RaidDaily']
 WAR_ARCHIVES = ['WarArchives']
 COALITIONS = ['Coalition', 'CoalitionSp']
@@ -650,7 +650,7 @@ class ConfigUpdater:
                              keys=f'{task}.Campaign.Event',
                              value=opts[0])
 
-            for task in ['GemsFarming']:
+            for task in GEMS_FARMINGS:
                 if deep_get(new, keys=f'{task}.Campaign.Event', default='campaign_main') != 'campaign_main':
                     deep_set(new,
                              keys=f'{task}.Campaign.Event',

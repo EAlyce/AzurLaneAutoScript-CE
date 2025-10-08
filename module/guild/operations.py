@@ -358,27 +358,25 @@ class GuildOperations(GuildBase):
             out: page_guild, guild operation, operation dispatch preparation (GUILD_DISPATCH_RECOMMEND)
         """
         dispatched = False
+        # 先点击推荐按钮
+        self.device.click(GUILD_DISPATCH_RECOMMEND)
+        self.device.sleep(1)
+        
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
             else:
                 self.device.screenshot()
 
-            if self.appear(GUILD_DISPATCH_FLEET_UNFILLED, offset=(20, 20), interval=3):
+            if self.appear(GUILD_DISPATCH_FLEET_UNFILLED, threshold=20, interval=5):
                 # Don't use offset here, because GUILD_DISPATCH_FLEET_UNFILLED only has a difference in colors
                 # Use long interval because the game needs a few seconds to choose the ships
                 self.device.click(GUILD_DISPATCH_RECOMMEND)
                 continue
-            if not dispatched and self.appear(GUILD_DISPATCH_FLEET, offset=(20, 20), interval=3):
-                # GUILD_DISPATCH_FLEET and GUILD_DISPATCH_FLEET_UNFILLED has same feature but different colors
-                # check background blue for double check
-                if self.image_color_count(GUILD_DISPATCH_FLEET, color=(82, 93, 221), threshold=235, count=500):
-                    self.device.click(GUILD_DISPATCH_FLEET)
-                else:
-                    self.interval_clear(GUILD_DISPATCH_FLEET)
+            if not dispatched and self.appear_then_click(GUILD_DISPATCH_FLEET, threshold=20, interval=5):
+                # Don't use offset here, because GUILD_DISPATCH_FLEET only has a difference in colors
                 continue
             if self.handle_popup_confirm('GUILD_DISPATCH'):
-                self.interval_clear(GUILD_DISPATCH_FLEET)
                 dispatched = True
                 continue
 
@@ -387,16 +385,13 @@ class GuildOperations(GuildBase):
                 # In first dispatch, it will show GUILD_DISPATCH_IN_PROGRESS
                 logger.info('Fleet dispatched, dispatch in progress')
                 break
-            if dispatched and self.appear(GUILD_DISPATCH_FLEET, offset=(20, 20), interval=3):
-                # GUILD_DISPATCH_FLEET and GUILD_DISPATCH_FLEET_UNFILLED has same feature but different colors
-                # check background blue for double check
-                if self.image_color_count(GUILD_DISPATCH_FLEET, color=(82, 93, 221), threshold=235, count=500):
-                    # In the rest of the dispatch, it will show GUILD_DISPATCH_FLEET
-                    # We can't ensure that fleet has dispatched,
-                    # because GUILD_DISPATCH_FLEET still shows after clicking recommend before dispatching
-                    # _guild_operations_dispatch() will retry it if haven't dispatched
-                    logger.info('Fleet dispatched')
-                    break
+            if dispatched and self.appear(GUILD_DISPATCH_FLEET, threshold=20, interval=0):
+                # In the rest of the dispatch, it will show GUILD_DISPATCH_FLEET
+                # We can't ensure that fleet has dispatched,
+                # because GUILD_DISPATCH_FLEET also shows after clicking recommend before dispatching
+                # _guild_operations_dispatch() will retry it if haven't dispatched
+                logger.info('Fleet dispatched')
+                break
 
     def _guild_operations_dispatch_exit(self, skip_first_screenshot=True):
         """
@@ -482,8 +477,9 @@ class GuildOperations(GuildBase):
             if self.appear_then_click(GUILD_BOSS_ENTER, interval=3):
                 continue
 
-            if self.appear(GUILD_DISPATCH_FLEET, offset=(20, 20), interval=3):
-                # Button does not appear greyed out even when empty fleet composition
+            if self.appear(GUILD_DISPATCH_FLEET, threshold=20, interval=3):
+                # Button does not appear greyed out even
+                # when empty fleet composition
                 if dispatch_count < 5:
                     self.device.click(GUILD_DISPATCH_FLEET)
                     dispatch_count += 1
@@ -494,8 +490,12 @@ class GuildOperations(GuildBase):
                 continue
 
             if self.config.GuildOperation_BossFleetRecommend:
-                if self.info_bar_count() and self.appear_then_click(GUILD_DISPATCH_RECOMMEND_2, interval=3):
+                if self.appear_then_click(GUILD_DISPATCH_RECOMMEND_2, interval=3):
                     continue
+            
+            # 处理舰队选择界面的推荐按钮（图片中显示的界面）
+            if self.appear_then_click(GUILD_DISPATCH_RECOMMEND, interval=3):
+                continue
 
             # Only print once when detected
             if not is_loading:

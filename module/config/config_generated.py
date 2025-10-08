@@ -138,6 +138,7 @@ class GeneratedConfig:
 
     # Group `C72MysteryFarming`
     C72MysteryFarming_StepOnA3 = True
+    C72MysteryFarming_MysteryCount = 4
 
     # Group `C122MediumLeveling`
     C122MediumLeveling_LargeEnemyTolerance = 1  # 0, 1, 2, 10

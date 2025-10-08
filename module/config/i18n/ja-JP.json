@@ -62,6 +62,10 @@
       "name": "Commission Farming",
       "help": ""
     },
+    "C72MysteryFarming": {
+      "name": "Task.C72MysteryFarming.name",
+      "help": "Task.C72MysteryFarming.help"
+    },
     "EventGeneral": {
       "name": "イベント共通設定",
       "help": ""
@@ -1127,6 +1131,10 @@
     "StepOnA3": {
       "name": "C72MysteryFarming.StepOnA3.name",
       "help": "C72MysteryFarming.StepOnA3.help"
+    },
+    "MysteryCount": {
+      "name": "C72MysteryFarming.MysteryCount.name",
+      "help": "C72MysteryFarming.MysteryCount.help"
     }
   },
   "C122MediumLeveling": {

@@ -62,6 +62,10 @@
       "name": "刷緊急委託",
       "help": ""
     },
+    "C72MysteryFarming": {
+      "name": "Task.C72MysteryFarming.name",
+      "help": "Task.C72MysteryFarming.help"
+    },
     "EventGeneral": {
       "name": "活動通用",
       "help": ""
@@ -1127,6 +1131,10 @@
     "StepOnA3": {
       "name": "用二隊踩 A3",
       "help": "能有效避免 A2 的問號點被堵住"
+    },
+    "MysteryCount": {
+      "name": "C72MysteryFarming.MysteryCount.name",
+      "help": "C72MysteryFarming.MysteryCount.help"
     }
   },
   "C122MediumLeveling": {

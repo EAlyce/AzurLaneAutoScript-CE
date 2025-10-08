@@ -161,6 +161,10 @@ class StrategicSearchHandler(MapEventHandler):
                     and self.handle_popup_confirm(offset=(30, 30), name='STRATEGIC_SEARCH'):
                 continue
 
+            # 处理潜艇返回港口确认弹窗
+            if self.handle_popup_confirm(name='SUBMARINE_RETURN'):
+                continue
+
             if self.is_in_map():
                 return True
 

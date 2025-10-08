@@ -61,6 +61,16 @@ Farm:
       - Campaign
       - StopCondition
       - Fleet
+    C72MysteryFarming:
+      - Scheduler
+      - C72MysteryFarming
+      - Campaign
+      - StopCondition
+      - Fleet
+      - Submarine
+      - Emotion
+      - HpControl
+      - EnemyPriority
 
 # ==================== Event ====================
 

@@ -71,6 +71,34 @@ class Campaign(CampaignBase):
 
         return self.battle_default()
 
+    def battle_3(self):
+        # After 3 battles, pick up mysteries then retreat to loop.
+        # Get mystery count from config, default is 4
+        mystery_count = self.config.C72MysteryFarming_MysteryCount if hasattr(self.config, 'C72MysteryFarming_MysteryCount') else 4
+        picked = 0
+        
+        while picked < mystery_count:
+            # Check if fleet 1 is defeated
+            if self.is_in_map() and self.handle_fleet_reverse():
+                logger.info('Fleet 1 defeated, withdrawing')
+                break
+            
+            # Try to clear mysteries
+            if self.clear_all_mystery(nearby=False):
+                picked += 1
+                logger.info(f'Picked mystery {picked}/{mystery_count}')
+            else:
+                # No more mysteries available
+                logger.info('No more mysteries, withdrawing')
+                break
+            
+            # Clear roadblocks if any
+            if self.clear_potential_roadblocks([ROAD_MAIN]):
+                continue
+        
+        self.withdraw()
+        return True
+
     def battle_5(self):
         ignore = None
         if self.fleet_at(A3, fleet=2):

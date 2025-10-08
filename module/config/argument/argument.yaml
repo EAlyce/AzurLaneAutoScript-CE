@@ -249,7 +249,12 @@ EnemyPriority:
 C11AffinityFarming:
   RunCount: 32
 C72MysteryFarming:
-  StepOnA3: true
+  StepOnA3:
+    value: true
+    type: checkbox
+  MysteryCount:
+    value: 4
+    type: input
 C122MediumLeveling:
   LargeEnemyTolerance:
     value: 1

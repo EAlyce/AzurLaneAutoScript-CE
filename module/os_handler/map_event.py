@@ -26,6 +26,10 @@ fleet_lock.add_state('off', check_button=OS_FLEET_UNLOCKED)
 
 class MapEventHandler(EnemySearchingHandler):
     ash_popup_canceled = False
+    
+    def __init__(self, config, device=None):
+        super().__init__(config, device)
+        self.map_get_items_timer = Timer(2, count=1)
 
     def handle_map_get_items(self, interval=2, drop=None):
         if self.is_in_map():
@@ -140,35 +144,41 @@ class MapEventHandler(EnemySearchingHandler):
                 self.enemy_searching_color_initial()
             if timeout.reached():
                 logger.info('Enemy searching timeout.')
-                break
 
         return True
 
     def handle_map_event(self, drop=None):
         """
-        Args:
-            drop (DropImage):
-
         Returns:
-            str: Event that handled
+            bool: If clicked.
         """
+        if self.is_in_stage():
+            return False
+
+        # Priority 1: Handle get items screens first
         if self.handle_map_get_items(drop=drop):
-            return 'map_get_items'
-        if self.handle_os_game_tips():
-            return 'os_game_tips'
+            self.map_get_items_timer.reset()
+            return True
+        
+        # Priority 2: Handle archives
         if self.handle_map_archives(drop=drop):
-            return 'map_archives'
-        if self.handle_guild_popup_cancel():
-            return 'guild_popup_cancel'
-        if self.handle_ash_popup():
-            return 'ash_popup'
+            return True
+        
+        # Priority 3: Handle game tips
+        if self.handle_os_game_tips():
+            return True
+        
+        # Priority 4: Handle story skip (includes get items check)
+        if self.handle_story_skip(drop=drop):
+            self.interval_reset(AUTO_SEARCH_REWARD)
+            return True
+        
+        # Priority 5: Handle urgent commission
         if self.handle_urgent_commission(drop=drop):
-            return 'urgent_commission'
-        if self.handle_story_skip():
-            return 'story_skip'
-
-        return ''
-
+            return True
+        
+        return False
+        
     _os_in_map_confirm_timer = Timer(1.5, count=3)
 
     def handle_os_in_map(self):
@@ -289,18 +299,31 @@ class MapEventHandler(EnemySearchingHandler):
         if enable is None:
             pass
         elif enable:
-            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_OFF, offset=(5, 120), interval=3):
+            # Check if already enabled
+            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120)):
+                return False
+            # Enable auto search
+            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_OFF, offset=(5, 120), interval=5):
                 self.device.click(AUTO_SEARCH_OS_MAP_OPTION_OFF)
                 self.interval_reset(AUTO_SEARCH_OS_MAP_OPTION_OFF_DISABLED)
+                self.interval_reset(AUTO_SEARCH_OS_MAP_OPTION_ON)
                 return True
             # Game client bugged sometimes, AUTO_SEARCH_OS_MAP_OPTION_OFF grayed out but still functional
-            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_OFF_DISABLED, offset=(5, 120), interval=3):
+            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_OFF_DISABLED, offset=(5, 120), interval=5):
                 self.device.click(AUTO_SEARCH_OS_MAP_OPTION_OFF_DISABLED)
                 self.interval_reset(AUTO_SEARCH_OS_MAP_OPTION_OFF)
+                self.interval_reset(AUTO_SEARCH_OS_MAP_OPTION_ON)
                 return True
         else:
-            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120), interval=3):
+            # Check if already disabled
+            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_OFF, offset=(5, 120)) or \
+               self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_OFF_DISABLED, offset=(5, 120)):
+                return False
+            # Disable auto search
+            if self.match_template_color(AUTO_SEARCH_OS_MAP_OPTION_ON, offset=(5, 120), interval=5):
                 self.device.click(AUTO_SEARCH_OS_MAP_OPTION_ON)
+                self.interval_reset(AUTO_SEARCH_OS_MAP_OPTION_OFF)
+                self.interval_reset(AUTO_SEARCH_OS_MAP_OPTION_OFF_DISABLED)
                 return True
 
         return False

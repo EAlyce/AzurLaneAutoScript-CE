@@ -412,8 +412,9 @@ class OperationSiren(OSMap):
             OpsiGeneral_DoRandomMapEvent=True,
             OpsiGeneral_AkashiShopFilter='ActionPoint',
         )
-        if not self.config.is_task_enabled('OpsiMeowfficerFarming'):
-            self.config.cross_set(keys='OpsiMeowfficerFarming.Scheduler.Enable', value=True)
+        # 注释掉自动启用短猫相接的逻辑，允许永续侵蚀1
+        # if not self.config.is_task_enabled('OpsiMeowfficerFarming'):
+        #     self.config.cross_set(keys='OpsiMeowfficerFarming.Scheduler.Enable', value=True)
         while True:
             # Limited action point preserve of hazard 1 to 200
             self.config.OS_ACTION_POINT_PRESERVE = 200
@@ -426,10 +427,9 @@ class OperationSiren(OSMap):
 
             if self.get_yellow_coins() < self.config.OS_CL1_YELLOW_COINS_PRESERVE:
                 logger.info(f'Reach the limit of yellow coins, preserve={self.config.OS_CL1_YELLOW_COINS_PRESERVE}')
-                with self.config.multi_set():
-                    self.config.task_delay(server_update=True)
-                    if not self.is_in_opsi_explore():
-                        self.config.task_call('OpsiMeowfficerFarming')
+                # 黄币不足时停止侵蚀1，但不自动启用短猫相接
+                logger.info('Yellow coins insufficient, stopping CL1 leveling without calling meowfficer farming')
+                self.config.task_delay(server_update=True)
                 self.config.task_stop()
 
             self.get_current_zone()
@@ -441,10 +441,9 @@ class OperationSiren(OSMap):
                 keep_current_ap = False
             self.action_point_set(cost=70, keep_current_ap=keep_current_ap, check_rest_ap=True)
             if self._action_point_total >= 3000:
-                with self.config.multi_set():
-                    self.config.task_delay(server_update=True)
-                    if not self.is_in_opsi_explore():
-                        self.config.task_call('OpsiMeowfficerFarming')
+                # 行动力过多时停止侵蚀1，但不自动启用短猫相接
+                logger.info('Action points overflow (>=3000), stopping CL1 leveling without calling meowfficer farming')
+                self.config.task_delay(server_update=True)
                 self.config.task_stop()
 
             if self.config.OpsiHazard1Leveling_TargetZone != 0:

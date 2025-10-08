@@ -6,6 +6,11 @@
 
 # ==================== Farm ====================
 
+C72MysteryFarming:
+  MysteryCount: 4
+  Emotion:
+    Mode: ignore
+
 # ==================== Event ====================
 
 EventA:

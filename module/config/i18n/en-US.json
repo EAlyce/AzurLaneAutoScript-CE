@@ -62,6 +62,10 @@
       "name": "Commission Farming",
       "help": ""
     },
+    "C72MysteryFarming": {
+      "name": "Task.C72MysteryFarming.name",
+      "help": "Task.C72MysteryFarming.help"
+    },
     "EventGeneral": {
       "name": "Event General",
       "help": ""
@@ -1127,6 +1131,10 @@
     "StepOnA3": {
       "name": "Step A3",
       "help": "Effectively prevents mystery on A2 from being blocked"
+    },
+    "MysteryCount": {
+      "name": "C72MysteryFarming.MysteryCount.name",
+      "help": "C72MysteryFarming.MysteryCount.help"
     }
   },
   "C122MediumLeveling": {
