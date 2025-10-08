@@ -212,8 +212,12 @@ class Updater(DeployConfig, GitManager, PipManager):
         return 1
 
     def check_update(self):
-        if self.state in (0, "failed", "finish"):
-            self.state = self._check_update()
+        try:
+            if self.state in (0, "failed", "finish"):
+                self.state = self._check_update()
+        except Exception as e:
+            logger.exception("Check update failed")
+            self.state = "failed"
 
     @retry(ExecutionError, tries=3, delay=5, logger=None)
     def git_install(self):

@@ -2735,7 +2735,12 @@
       "AutoUpdateOff": "开启自动更新",
       "AutoUpdateEnabled": "自动更新已开启，需要重启程序生效",
       "AutoUpdateDisabled": "自动更新已关闭，需要重启程序生效",
-      "RestartRequired": "注意：更改自动更新设置后需要重启程序才能生效"
+      "RestartRequired": "注意：更改自动更新设置后需要重启程序才能生效",
+      "NoHistory": "无法获取提交历史",
+      "NoValidHistory": "无法获取有效的提交历史",
+      "GetInfoFailed": "获取更新信息失败",
+      "GetHistoryFailed": "获取提交历史失败",
+      "SettingError": "更新设置时出错"
     },
     "Remote": {
       "Running": "运行中",

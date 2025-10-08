@@ -777,38 +777,62 @@ class AlasGUI(Frame):
         put_scope("updater_info")
 
         def update_table():
-            with use_scope("updater_info", clear=True):
-                local_commit = updater.get_commit(short_sha1=True)
-                upstream_commit = updater.get_commit(
-                    f"origin/{updater.Branch}", short_sha1=True
-                )
-                put_table(
-                    [
-                        [t("Gui.Update.Local"), *local_commit],
-                        [t("Gui.Update.Upstream"), *upstream_commit],
-                    ],
-                    header=[
-                        "",
-                        "SHA1",
-                        t("Gui.Update.Author"),
-                        t("Gui.Update.Time"),
-                        t("Gui.Update.Message"),
-                    ],
-                )
-            with use_scope("updater_detail", clear=True):
-                put_text(t("Gui.Update.DetailedHistory"))
-                history = updater.get_commit(
-                    f"origin/{updater.Branch}", n=20, short_sha1=True
-                )
-                put_table(
-                    [commit for commit in history],
-                    header=[
-                        "SHA1",
-                        t("Gui.Update.Author"),
-                        t("Gui.Update.Time"),
-                        t("Gui.Update.Message"),
-                    ],
-                )
+            try:
+                with use_scope("updater_info", clear=True):
+                    local_commit = updater.get_commit(short_sha1=True)
+                    upstream_commit = updater.get_commit(
+                        f"origin/{updater.Branch}", short_sha1=True
+                    )
+                    
+                    # Handle None values
+                    if local_commit == (None, None, None, None):
+                        local_commit = ("Unknown", "Unknown", "Unknown", "Unknown")
+                    if upstream_commit == (None, None, None, None):
+                        upstream_commit = ("Unknown", "Unknown", "Unknown", "Unknown")
+                    
+                    put_table(
+                        [
+                            [t("Gui.Update.Local"), *local_commit],
+                            [t("Gui.Update.Upstream"), *upstream_commit],
+                        ],
+                        header=[
+                            "",
+                            "SHA1",
+                            t("Gui.Update.Author"),
+                            t("Gui.Update.Time"),
+                            t("Gui.Update.Message"),
+                        ],
+                    )
+                with use_scope("updater_detail", clear=True):
+                    put_text(t("Gui.Update.DetailedHistory"))
+                    history = updater.get_commit(
+                        f"origin/{updater.Branch}", n=20, short_sha1=True
+                    )
+                    
+                    # Handle empty or None history
+                    if not history or history == []:
+                        put_text(t("Gui.Update.NoHistory"))
+                    else:
+                        # Filter out invalid commits
+                        valid_commits = [commit for commit in history if commit and len(commit) >= 4]
+                        if valid_commits:
+                            put_table(
+                                valid_commits,
+                                header=[
+                                    "SHA1",
+                                    t("Gui.Update.Author"),
+                                    t("Gui.Update.Time"),
+                                    t("Gui.Update.Message"),
+                                ],
+                            )
+                        else:
+                            put_text(t("Gui.Update.NoValidHistory"))
+            except Exception as e:
+                logger.exception("Update table failed")
+                with use_scope("updater_info", clear=True):
+                    put_text(t("Gui.Update.GetInfoFailed"))
+                with use_scope("updater_detail", clear=True):
+                    put_text(t("Gui.Update.GetHistoryFailed"))
 
         def u(state):
             if state == -1:
@@ -942,7 +966,7 @@ class AlasGUI(Frame):
                 update_auto_update_button()
             except Exception as e:
                 logger.exception(e)
-                toast("更新设置时出错", duration=3, color="error")
+                toast(t("Gui.Update.SettingError"), duration=3, color="error")
         
         def update_auto_update_button():
             try:
