@@ -416,7 +416,7 @@ class UI(InfoHandler):
             if self.appear_then_click(GOTO_MAIN, offset=(30, 30)):
                 return True
         # Mistaken click
-        if self.appear(PLAYER_CHECK, offset=(30, 30), interval=3):
+        if self.appear(PLAYER_CHECK, offset=(30, 30), interval=5):
             logger.info(f'UI additional: {PLAYER_CHECK} -> {GOTO_MAIN}')
             if self.appear_then_click(GOTO_MAIN, offset=(30, 30)):
                 return True
@@ -619,6 +619,8 @@ class UI(InfoHandler):
             self.interval_reset(GET_SHIP)
         if button == DORMMENU_GOTO_MAIN:
             self.interval_reset(GET_SHIP)
+        if button in [GOTO_MAIN, BACK_ARROW]:
+            self.interval_reset(PLAYER_CHECK)
         for switch_button in page_main.links.values():
             if button == switch_button:
                 self.interval_reset(GET_SHIP)
