@@ -1,3 +1,11 @@
+原版链接： https://github.com/LmeSzinc/AzurLaneAutoScript
+
+本版仅作为个人使用，不接受issues 以及Pull requests。使用此版本出现问题后请使用原版，谢谢
+
+与原版相比新增7-2三战捡问号、永续侵蚀一
+
+本版本不会实时拉取原版代码更新（能用就行，不想更新）
+
 **| [English](README_en.md) | 简体中文 | [日本語](README_jp.md) |**
 
 # AzurLaneAutoScript
