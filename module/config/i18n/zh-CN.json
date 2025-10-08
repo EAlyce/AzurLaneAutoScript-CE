@@ -2730,7 +2730,12 @@
       "Time": "提交时间",
       "Message": "提交信息",
       "DisabledWarn": "更新模块未启用，你需要手动重启 Alas 进行更新",
-      "DetailedHistory": "详细提交历史"
+      "DetailedHistory": "详细提交历史",
+      "AutoUpdateOn": "关闭自动更新",
+      "AutoUpdateOff": "开启自动更新",
+      "AutoUpdateEnabled": "自动更新已开启，需要重启程序生效",
+      "AutoUpdateDisabled": "自动更新已关闭，需要重启程序生效",
+      "RestartRequired": "注意：更改自动更新设置后需要重启程序才能生效"
     },
     "Remote": {
       "Running": "运行中",

@@ -773,6 +773,7 @@ class AlasGUI(Frame):
         )
 
         put_scope("updater_btn")
+        put_scope("updater_settings")
         put_scope("updater_info")
 
         def update_table():
@@ -924,6 +925,45 @@ class AlasGUI(Frame):
             status=u, get_state=lambda: updater.state, name="updater"
         )
 
+        # Add auto update toggle
+        def toggle_auto_update():
+            try:
+                current_state = State.deploy_config.AutoUpdate
+                new_state = not current_state
+                State.deploy_config.AutoUpdate = new_state
+                
+                # Show restart warning
+                if new_state:
+                    toast(t("Gui.Update.AutoUpdateEnabled"), duration=5, color="success")
+                else:
+                    toast(t("Gui.Update.AutoUpdateDisabled"), duration=5, color="warning")
+                
+                # Update the button display
+                update_auto_update_button()
+            except Exception as e:
+                logger.exception(e)
+                toast("更新设置时出错", duration=3, color="error")
+        
+        def update_auto_update_button():
+            try:
+                with use_scope("updater_settings", clear=True):
+                    current_state = State.deploy_config.AutoUpdate
+                    button_text = t("Gui.Update.AutoUpdateOn") if current_state else t("Gui.Update.AutoUpdateOff")
+                    button_color = "danger" if current_state else "success"
+                    
+                    put_button(
+                        button_text,
+                        onclick=toggle_auto_update,
+                        color=button_color
+                    )
+                    
+                    # Add restart warning
+                    put_html("<br>")
+                    put_warning(t("Gui.Update.RestartRequired"))
+            except Exception as e:
+                logger.exception(e)
+        
+        update_auto_update_button()
         update_table()
         self.task_handler.add(updater_switch.g(), delay=0.5, pending_delete=True)
 

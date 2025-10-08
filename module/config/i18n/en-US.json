@@ -2730,7 +2730,12 @@
       "Time": "Commit time",
       "Message": "Commit message",
       "DisabledWarn": "Updater module is disabled. You need to manually restart Alas to update",
-      "DetailedHistory": "Detailed Commit History"
+      "DetailedHistory": "Detailed Commit History",
+      "AutoUpdateOn": "Disable Auto Update",
+      "AutoUpdateOff": "Enable Auto Update",
+      "AutoUpdateEnabled": "Auto update enabled, restart required to take effect",
+      "AutoUpdateDisabled": "Auto update disabled, restart required to take effect",
+      "RestartRequired": "Note: Restart the program after changing auto update settings to take effect"
     },
     "Remote": {
       "Running": "Remote access on",

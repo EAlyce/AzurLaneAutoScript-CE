@@ -38,76 +38,107 @@ class Updater(DeployConfig, GitManager, PipManager):
             return None
 
     def execute_output(self, command) -> str:
-        command = command.replace(r"\\", "/").replace("\\", "/").replace('"', '"')
-        log = subprocess.run(
-            command, capture_output=True, text=True, encoding="utf8", shell=True
-        ).stdout
-        return log
+        try:
+            command = command.replace(r"\\", "/").replace("\\", "/").replace('"', '"')
+            result = subprocess.run(
+                command, capture_output=True, text=True, encoding="utf8", shell=True, timeout=30
+            )
+            return result.stdout
+        except subprocess.TimeoutExpired:
+            logger.warning(f"Command timeout: {command}")
+            return ""
+        except Exception as e:
+            logger.exception(f"Execute command failed: {command}")
+            return ""
 
     def get_commit(self, revision="", n=1, short_sha1=False) -> Tuple:
         """
         Return:
             (sha1, author, isotime, message,)
         """
-        ph = "h" if short_sha1 else "H"
+        try:
+            ph = "h" if short_sha1 else "H"
 
-        log = self.execute_output(
-            f'"{self.git}" log {revision} --pretty=format:"%{ph}---%an---%ad---%s" --date=iso -{n}'
-        )
+            log = self.execute_output(
+                f'"{self.git}" log {revision} --pretty=format:"%{ph}---%an---%ad---%s" --date=iso -{n}'
+            )
 
-        if not log:
-            return None, None, None, None
+            if not log:
+                return None, None, None, None
 
-        logs = log.split("\n")
-        logs = list(map(lambda log: tuple(log.split("---")), logs))
+            logs = log.split("\n")
+            logs = list(map(lambda log: tuple(log.split("---", 3)), logs))
 
-        if n == 1:
-            return logs[0]
-        else:
-            return logs
+            if n == 1:
+                if logs and len(logs[0]) >= 4:
+                    return logs[0]
+                else:
+                    return None, None, None, None
+            else:
+                return [log for log in logs if len(log) >= 4]
+        except Exception as e:
+            logger.exception(f"Get commit failed: {revision}")
+            if n == 1:
+                return None, None, None, None
+            else:
+                return []
 
     def _check_update(self) -> bool:
-        self.state = "checking"
+        try:
+            self.state = "checking"
 
-        if State.deploy_config.GitOverCdn:
-            status = self.goc_client.get_status()
-            if status == "uptodate":
-                logger.info(f"No update")
+            if State.deploy_config.GitOverCdn:
+                try:
+                    status = self.goc_client.get_status()
+                    if status == "uptodate":
+                        logger.info(f"No update")
+                        return False
+                    elif status == "behind":
+                        logger.info(f"New update available")
+                        return True
+                    else:
+                        # failed, should fallback to `git pull`
+                        pass
+                except Exception as e:
+                    logger.warning(f"GitOverCdn check failed: {e}")
+
+            source = "origin"
+            for _ in range(3):
+                try:
+                    if self.execute(
+                        f'"{self.git}" fetch {source} {self.Branch}', allow_failure=True
+                    ):
+                        break
+                except Exception as e:
+                    logger.warning(f"Git fetch attempt failed: {e}")
+            else:
+                logger.warning("Git fetch failed")
                 return False
-            elif status == "behind":
+
+            log = self.execute_output(
+                f'"{self.git}" log --not --remotes={source}/* -1 --oneline'
+            )
+            if log and log.strip():
+                try:
+                    commit_hash = log.split()[0]
+                    logger.info(
+                        f"Cannot find local commit {commit_hash} in upstream, skip update"
+                    )
+                    return False
+                except (IndexError, AttributeError):
+                    logger.warning("Failed to parse local commit log")
+
+            sha1, _, _, message = self.get_commit(f"..{source}/{self.Branch}")
+
+            if sha1:
                 logger.info(f"New update available")
+                logger.info(f"{sha1[:8]} - {message}")
                 return True
             else:
-                # failed, should fallback to `git pull`
-                pass
-
-        source = "origin"
-        for _ in range(3):
-            if self.execute(
-                f'"{self.git}" fetch {source} {self.Branch}', allow_failure=True
-            ):
-                break
-        else:
-            logger.warning("Git fetch failed")
-            return False
-
-        log = self.execute_output(
-            f'"{self.git}" log --not --remotes={source}/* -1 --oneline'
-        )
-        if log:
-            logger.info(
-                f"Cannot find local commit {log.split()[0]} in upstream, skip update"
-            )
-            return False
-
-        sha1, _, _, message = self.get_commit(f"..{source}/{self.Branch}")
-
-        if sha1:
-            logger.info(f"New update available")
-            logger.info(f"{sha1[:8]} - {message}")
-            return True
-        else:
-            logger.info(f"No update")
+                logger.info(f"No update")
+                return False
+        except Exception as e:
+            logger.exception("Check update failed")
             return False
 
     def _check_update_(self) -> bool:
