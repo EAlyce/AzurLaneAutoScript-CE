@@ -16,6 +16,7 @@
 使用方法：仅针对首次使用
 
 下载原版：https://github.com/LmeSzinc/AzurLaneAutoScript/releases/download/v2025.07.13/AlasApp_0.4.9_full.7z
+
 下载社区版：https://github.com/EAlyce/AzurLaneAutoScript-CE/archive/refs/heads/main.zip 
 
 将社区版解压覆盖原版即可
