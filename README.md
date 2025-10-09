@@ -12,6 +12,14 @@
 
 注意：本版本不会实时同步原项目的更新（不计划持续更新）。
 
+
+使用方法：仅针对首次使用
+
+下载原版：https://github.com/LmeSzinc/AzurLaneAutoScript/releases/download/v2025.07.13/AlasApp_0.4.9_full.7z
+下载社区版：https://github.com/EAlyce/AzurLaneAutoScript-CE/archive/refs/heads/main.zip 
+
+将社区版解压覆盖原版即可
+
 以下是原版AzurLaneAutoScript说明
 
 **| [English](README_en.md) | 简体中文 | [日本語](README_jp.md) |**
